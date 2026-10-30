@@ -1,0 +1,82 @@
+<%# Fork override of app/views/public/api/v1/portals/search/_search_handler.html.erb: the original script (first <script>) plus Tindre's answer above the article results. %>
+<% if @query.present? %>
+  <div class="<%= request.variant.documentation? ? 'mb-8' : 'max-w-5xl w-full mx-auto px-4 md:px-8 pt-6' %>"
+       data-tindre-answer
+       data-url="<%= portal_search_path(@portal.slug, params[:locale], format: :json, query: @query) %>">
+    <div class="flex flex-col gap-3 p-4 rounded-lg border border-solid border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+      <p class="text-sm font-semibold text-slate-800 dark:text-slate-100"><%= I18n.t('public_portal.tindre.title') %></p>
+      <p class="text-base text-slate-700 dark:text-slate-200 whitespace-pre-line" data-tindre-text><%= I18n.t('public_portal.tindre.loading') %></p>
+      <div class="hidden flex-col gap-1" data-tindre-sources>
+        <p class="text-sm font-medium text-slate-600 dark:text-slate-400"><%= I18n.t('public_portal.tindre.sources') %></p>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+(function() {
+  const searchInputs = document.querySelectorAll('[data-search-input]');
+
+  searchInputs.forEach(function(input) {
+    let debounceTimer;
+
+    if (input.value.length > 0) {
+      setTimeout(function() {
+        input.setSelectionRange(input.value.length, input.value.length);
+      }, 0);
+    }
+
+    input.addEventListener('input', function() {
+      const form = input.closest('[data-search-form]');
+      const query = input.value.trim();
+
+      clearTimeout(debounceTimer);
+
+      debounceTimer = setTimeout(function() {
+        const currentQuery = new URLSearchParams(window.location.search).get('query') || '';
+        if (query !== currentQuery) {
+          form.requestSubmit();
+        }
+      }, 500);
+    });
+
+    input.closest('[data-search-form]').addEventListener('submit', function() {
+      clearTimeout(debounceTimer);
+    });
+  });
+})();
+</script>
+
+<script>
+(function() {
+  const box = document.querySelector('[data-tindre-answer]');
+  if (!box) return;
+
+  fetch(box.dataset.url, { headers: { Accept: 'application/json' } })
+    .then(function(response) {
+      if (!response.ok) throw new Error(response.status);
+      return response.json();
+    })
+    .then(function(result) {
+      if (result.no_answer || !result.answer) throw new Error('no answer');
+
+      box.querySelector('[data-tindre-text]').textContent = result.answer;
+      if (!result.sources.length) return;
+
+      const list = box.querySelector('[data-tindre-sources]');
+      result.sources.forEach(function(source) {
+        const link = document.createElement('a');
+        link.href = source.url;
+        link.textContent = source.title || source.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'text-sm text-slate-700 dark:text-slate-200 underline hover:text-slate-900 dark:hover:text-slate-50';
+        list.appendChild(link);
+      });
+      list.classList.replace('hidden', 'flex');
+    })
+    .catch(function() {
+      box.remove();
+    });
+})();
+</script>

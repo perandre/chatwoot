@@ -25,6 +25,7 @@ const tailwindConfig = {
   darkMode: 'class',
   content: [
     './custom/javascript/**/*.vue',
+    './custom/app/views/**/*.erb',
     './enterprise/app/views/**/*.erb',
     './app/javascript/widget/**/*.vue',
     './app/javascript/v3/**/*.vue',

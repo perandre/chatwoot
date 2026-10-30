@@ -56,6 +56,8 @@ module Chatwoot
     # rubocop:disable Rails/FilePath
     config.eager_load_paths += Dir["#{Rails.root}/custom/app/**"]
     # rubocop:enable Rails/FilePath
+    config.paths['app/views'].unshift('custom/app/views')
+    config.i18n.load_path += Dir[Rails.root.join('custom/config/locales/*.yml')]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
