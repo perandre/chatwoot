@@ -1,0 +1,16 @@
+# custom/ — fork overlay
+
+Fork-specific code lives here so merges from upstream Chatwoot stay conflict-free. Core has two small hooks:
+
+- `config/application.rb` autoloads `custom/app/**`. Modules under `custom/app/**/custom/` extend core classes that call `prepend_mod_with` (same mechanism as `enterprise/`).
+- `vite.config.ts` loads `custom/vite-overrides.ts`: a file at `custom/javascript/<path>` replaces `app/javascript/<path>`.
+
+After an upstream merge, check each overridden file against its original for changed props or APIs.
+
+## Tindre in the reply editor (POC)
+
+- `javascript/dashboard/components/widgets/WootWriter/CopilotMenuBar.vue`: the AI menu shows only "Suggest a reply" and "Summarize the conversation".
+- `app/controllers/custom/api/v1/accounts/captain/tasks_controller.rb`: those actions (and follow-ups) ask Tindre instead of Captain's LLM.
+- `app/services/tindre/assist_client.rb`: calls the tindre-chatwoot-bridge Worker (`POST /assist`), which holds the Tindre key.
+
+Env: `TINDRE_ASSIST_URL`, `TINDRE_ASSIST_SECRET` (same value as the Worker's `ASSIST_SECRET`).
