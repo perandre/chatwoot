@@ -1,6 +1,7 @@
 const { slateDark } = require('@radix-ui/colors');
 import { colors } from './theme/colors';
 import { icons } from './theme/icons';
+import { icons as customIcons } from './custom/theme/icons';
 const defaultTheme = require('tailwindcss/defaultTheme');
 const plugin = require('tailwindcss/plugin');
 const {
@@ -23,6 +24,7 @@ const defaultSansFonts = [
 const tailwindConfig = {
   darkMode: 'class',
   content: [
+    './custom/javascript/**/*.vue',
     './enterprise/app/views/**/*.erb',
     './app/javascript/widget/**/*.vue',
     './app/javascript/v3/**/*.vue',
@@ -307,7 +309,7 @@ const tailwindConfig = {
     require('@tailwindcss/typography'),
     iconsPlugin({
       collections: {
-        woot: { icons },
+        woot: { icons: { ...icons, ...customIcons } },
         ...getIconCollections([
           'lucide',
           'logos',

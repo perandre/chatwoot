@@ -11,6 +11,8 @@ After an upstream merge, check each overridden file against its original for cha
 
 - `javascript/dashboard/components/widgets/WootWriter/CopilotMenuBar.vue`: the AI menu shows only "Suggest a reply" and "Summarize the conversation".
 - `app/controllers/custom/api/v1/accounts/captain/tasks_controller.rb`: those actions (and follow-ups) ask Tindre instead of Captain's LLM.
+- `javascript/dashboard/components/widgets/WootWriter/ReplyTopPanel.vue`: the AI menu button shows the Tindre mark (`i-woot-tindre`, defined in `theme/icons.js` and merged in `tailwind.config.js`).
+- `javascript/dashboard/components/widgets/conversation/ReplyBoxBanner.vue`: the "handled by the bot" banner on pending conversations shows the Tindre mark.
 - `app/services/tindre/assist_client.rb`: calls the tindre-chatwoot-bridge Worker (`POST /assist`), which holds the Tindre key.
 
 Env: `TINDRE_ASSIST_URL`, `TINDRE_ASSIST_SECRET` (same value as the Worker's `ASSIST_SECRET`).
