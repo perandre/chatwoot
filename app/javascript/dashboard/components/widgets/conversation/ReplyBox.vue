@@ -1278,7 +1278,11 @@ export default {
         forwardToEmail
       );
 
-      this.toEmails = to.join(', ');
+      // getRecipients leaves `to` empty after an outgoing email sent without
+      // to_emails; the mailer then sends to the contact, so show that here
+      this.toEmails = (to.length ? to : [conversationContact])
+        .filter(Boolean)
+        .join(', ');
       this.ccEmails = cc.join(', ');
       this.bccEmails = bcc.join(', ');
     },
