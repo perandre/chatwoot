@@ -1,5 +1,5 @@
 <script>
-// Fork copy of ReplyTopPanel.vue: the AI menu button shows the Tindre mark in Tindre colours.
+// Fork copy of ReplyTopPanel.vue: the AI menu button shows the Tindre mark on Tindre yellow.
 import { ref } from 'vue';
 import { useKeyboardEvents } from 'dashboard/composables/useKeyboardEvents';
 import { useCaptain } from 'dashboard/composables/useCaptain';
@@ -174,11 +174,8 @@ export default {
           ref="copilotToggleRef"
           ghost
           :disabled="disabled || isEditorDisabled"
-          :class="{
-            'text-n-slate-12 hover:enabled:!bg-[#ECEF8F] hover:enabled:!text-[#111]':
-              !showCopilotMenu,
-            '!bg-[#ECEF8F] !text-[#111]': showCopilotMenu,
-          }"
+          class="!bg-[#ECEF8F] !text-[#111] hover:enabled:brightness-95"
+          :class="{ 'ring-2 ring-[#ECEF8F]/40': showCopilotMenu }"
           sm
           icon="i-woot-tindre"
           @click="toggleCopilotMenu"
